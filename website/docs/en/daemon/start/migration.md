@@ -6,7 +6,14 @@ The v1 surface is documented in [v1 API Reference](/daemon/start/v1-api). The v2
 
 ## Migrate with the prebuilt images
 
-Replace `ghcr.io/agent-infra/sandbox:latest` (the 1.x AIO image) with `aio-daemon`, or with `aio-computer` for GUI use. The run command keeps the 1.x flags plus `--shm-size 4g` for Chromium; the commands, the gateway port and the startup timing are in [Quick Start](/daemon/start/quick-start#from-a-prebuilt-image).
+Replace the 1.x `ghcr.io/agent-infra/sandbox:latest` with either image:
+
+| Image | Contents |
+| --- | --- |
+| `enterprise-public-cn-beijing.cr.volces.com/vefaas-public/aio-daemon:1.0.1` | The daemon, Chromium, VNC, and the Python and Node toolchains behind an nginx gateway |
+| `enterprise-public-cn-beijing.cr.volces.com/vefaas-public/aio-computer:1.0.1` | All of that, plus an XFCE desktop and the `computer-use` worker |
+
+The run command keeps the 1.x flags plus `--shm-size 4g` for Chromium. The commands, the gateway port and the startup timing are in [Quick Start](/daemon/start/quick-start#from-a-prebuilt-image); the image versions are on [Daemon Releases](/daemon/start/releases).
 
 Then check the client against this list:
 
@@ -64,14 +71,16 @@ Validation failures answer `422` with `errors: [{location, message, type}]`, as 
 
 Status codes:
 
-- `400` — malformed request
-- `401` — missing or wrong API key
-- `403` — input denied by the OS
-- `404` — unknown route or object
-- `422` — failed validation
-- `429` — session or watcher capacity reached
-- `501` — not implemented on this daemon: a Linux-only route on Windows, or `/v1/jupyter` without `ipykernel`
-- `503` — capability unavailable right now
+| Status | Meaning |
+| --- | --- |
+| `400` | Malformed request |
+| `401` | Missing or wrong API key |
+| `403` | Input denied by the OS |
+| `404` | Unknown route or object |
+| `422` | Failed validation |
+| `429` | Session or watcher capacity reached |
+| `501` | Not implemented on this daemon: a Linux-only route on Windows, or `/v1/jupyter` without `ipykernel` |
+| `503` | Capability unavailable right now |
 
 
 ### Files
@@ -291,7 +300,7 @@ The Computer image adds `AIO_DESKTOP=xfce` and `ENABLE_DBUS=true`, which starts 
 
 ## Build a custom image
 
-Two starting points cover most cases. Add layers on top of `FROM enterprise-public-cn-beijing.cr.volces.com/vefaas-public/aio-daemon:1.0.0` (or `aio-computer`), or copy the `aiod` binary into any image you already have. See [Deployment](/daemon/ops/deployment).
+Two starting points cover most cases. Add layers on top of `FROM enterprise-public-cn-beijing.cr.volces.com/vefaas-public/aio-daemon:1.0.1` (or `aio-computer`), or copy the `aiod` binary into any image you already have. See [Deployment](/daemon/ops/deployment).
 
 The daemon resolves tools at request time from `PATH`. Installing packages in the Dockerfile is enough:
 
