@@ -15,3 +15,8 @@ doc_build/
 .history
 
 CLAUDE.md
+
+# Local diagnostic/build artifacts
+/.pnpm-store/
+/tmp/
+/.fugu_history/
